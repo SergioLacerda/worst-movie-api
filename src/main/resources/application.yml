@@ -50,3 +50,6 @@ boot:
     endpoint:
       health:
         show-details: always
+
+generateFile:
+  localDirectory: ${ENV_LOCAL_DIRECTORY:/tmp}
