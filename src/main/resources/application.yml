@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: worst-producer-api
+  profiles:
+    active: ${ENV:local}
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+      show_sql: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Default configurations
+info:
+  app:
+    name: ${spring.application.name}
+  doc:
+    swagger:
+      enable: ${app.swagger.enable:false}
+
+# Jackson Configuration
+jackson:
+  default-property-inclusion: NON_NULL
+
+# Spring Boot Actuator Config
+boot:
+  admin:
+    client:
+      enabled: false
+      url: ${ENV_SPRING_BOOT_ADMIN_URL}
+      instance:
+        name: ${spring.application.name}
+        prefer-ip: true
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health, metrics
+        exclude: beans, scheduledtasks, heapdump, mappings, env, flyway, configprops, shutdown
+    endpoint:
+      health:
+        show-details: always
