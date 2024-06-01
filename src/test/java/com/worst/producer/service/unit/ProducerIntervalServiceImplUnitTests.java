@@ -1,6 +1,6 @@
 package com.worst.producer.service.unit;
 
-import com.worst.producer.domain.ProducerEntity;
+import com.worst.producer.domain.ProducerPrizesEntity;
 import com.worst.producer.domain.dto.IntervalDTO;
 import com.worst.producer.domain.dto.ProducerPrizesDTO;
 import com.worst.producer.domain.dto.SumarizeProducersDTO;
@@ -69,15 +69,15 @@ class ProducerIntervalServiceImplUnitTests {
         assertInterval(EXPECTED_SECOND_PRODUCER_NAME, response.getMax().get(1), 89, 2010, 2099);
     }
 
-    private List<ProducerEntity> loadInvalidData() {
-        List<ProducerEntity> expectedProducers = new ArrayList<>();
-        expectedProducers.add(ProducerEntity.builder().build());
+    private List<ProducerPrizesEntity> loadInvalidData() {
+        List<ProducerPrizesEntity> expectedProducers = new ArrayList<>();
+        expectedProducers.add(ProducerPrizesEntity.builder().build());
 
         return expectedProducers;
     }
 
-    private List<ProducerEntity> loadData() {
-        List<ProducerEntity> expectedProducers = new ArrayList<>();
+    private List<ProducerPrizesEntity> loadData() {
+        List<ProducerPrizesEntity> expectedProducers = new ArrayList<>();
         expectedProducers.add(addProducer(EXPECTED_FIRST_PRODUCER_NAME, Arrays.asList(2000, 2001)));
         expectedProducers.add(addProducer(EXPECTED_SECOND_PRODUCER_NAME, Arrays.asList(2000, 2010, 2099)));
 
@@ -91,8 +91,8 @@ class ProducerIntervalServiceImplUnitTests {
         assertEquals(next, intervalDTO.getFollowingWin());
     }
 
-    private ProducerEntity addProducer(String name, List<Integer> years) {
-        return ProducerEntity.builder()
+    private ProducerPrizesEntity addProducer(String name, List<Integer> years) {
+        return ProducerPrizesEntity.builder()
             .producerName(name)
             .yearWinnerPrizes(years)
             .build();

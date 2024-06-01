@@ -1,20 +1,21 @@
 package com.worst.producer.service.unit;
 
-import com.worst.producer.domain.ProducerEntity;
-import com.worst.producer.repository.ProducerRepository;
-import com.worst.producer.service.FilesServiceImpl;
+import com.worst.producer.domain.MovieEntity;
+import com.worst.producer.domain.ProducerPrizesEntity;
+import com.worst.producer.repository.ProducerPrizeRepository;
 import com.worst.producer.service.ProducerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @SpringBootTest
 class ProducerServiceImplUnitTest {
@@ -23,124 +24,68 @@ class ProducerServiceImplUnitTest {
     private ProducerServiceImpl producerService;
 
     @Mock
-    private ProducerRepository producerRepository;
-
-    @Mock
-    private FilesServiceImpl fileService;
+    private ProducerPrizeRepository producerPrizeRepository;
 
     @Test
-    void testReadFileErrorFileNotFound() {
-        prepareMockReadFile(null);
-
-        List<ProducerEntity> response = producerService.loadProducersFromCSV();
+    void testLoadProducersWithoutMovies() {
+        List<ProducerPrizesEntity> response = producerService.loadProducersPrizesFromMovies(null);
         assertNotNull(response);
-        assertTrue(CollectionUtils.isEmpty(response));
+        assertTrue(isEmpty(response));
+        verifyNoInteractions(producerPrizeRepository);
 
-        verify(fileService, times(1)).loadFromDefaultPath();
-        verifyNoInteractions(producerRepository);
+        List<ProducerPrizesEntity> response2 = producerService.loadProducersPrizesFromMovies(new ArrayList<>());
+        assertNotNull(response2);
+        assertTrue(isEmpty(response2));
+
+        verifyNoInteractions(producerPrizeRepository);
     }
 
     @Test
-    void testReadFileErrorEmptyFile() {
-        prepareMockReadFile(new ArrayList<>());
-
-        List<ProducerEntity> response = producerService.loadProducersFromCSV();
+    void testLoadProducersWithInvalidContent() {
+        List<ProducerPrizesEntity> response = producerService.loadProducersPrizesFromMovies(loadInvalidMovies());
         assertNotNull(response);
-        assertTrue(CollectionUtils.isEmpty(response));
+        assertTrue(isEmpty(response));
 
-        verify(fileService, times(1)).loadFromDefaultPath();
-        verifyNoInteractions(producerRepository);
+        verifyNoInteractions(producerPrizeRepository);
     }
 
     @Test
-    void testReadFileErrorInvalidContent() {
-        prepareMockReadFile(generateInvalidLines());
+    void testLoadProducers() {
 
-        List<ProducerEntity> response = producerService.loadProducersFromCSV();
-        assertNotNull(response);
-        assertTrue(CollectionUtils.isEmpty(response));
-
-        verify(fileService, times(1)).loadFromDefaultPath();
-        verifyNoInteractions(producerRepository);
-    }
-
-    @Test
-    void testReadFile() {
-        prepareMockReadFile(generateLines());
-
-        List<ProducerEntity> response = producerService.loadProducersFromCSV();
-        assertNotNull(response);
-        assertEquals(1, response.size());
-
-        ProducerEntity producerResponse = response.get(0);
-        assertEquals("Producer 1", producerResponse.getProducerName());
-
-        assertNotNull(producerResponse.getYearWinnerPrizes());
-        assertEquals(3, producerResponse.getYearWinnerPrizes().size());
-        assertEquals(2000, producerResponse.getYearWinnerPrizes().get(0));
-        assertEquals(2010, producerResponse.getYearWinnerPrizes().get(1));
-        assertEquals(2011, producerResponse.getYearWinnerPrizes().get(2));
-
-        verify(fileService, times(1)).loadFromDefaultPath();
-        verifyNoInteractions(producerRepository);
-    }
-
-    @Test
-    void testReadFileWithTwoProducers() {
-        prepareMockReadFile(generateTwoProducersLines());
-
-        List<ProducerEntity> response = producerService.loadProducersFromCSV();
+        List<ProducerPrizesEntity> response = producerService.loadProducersPrizesFromMovies(loadMovies());
         assertNotNull(response);
         assertEquals(2, response.size());
 
-        ProducerEntity producerResponse = response.get(0);
+        ProducerPrizesEntity producerResponse = response.get(0);
         assertEquals("Producer 1", producerResponse.getProducerName());
 
         assertNotNull(producerResponse.getYearWinnerPrizes());
         assertEquals(1, producerResponse.getYearWinnerPrizes().size());
         assertEquals(2000, producerResponse.getYearWinnerPrizes().get(0));
 
-        ProducerEntity producerResponse2 = response.get(1);
+        ProducerPrizesEntity producerResponse2 = response.get(1);
         assertEquals("Producer 2", producerResponse2.getProducerName());
 
         assertNotNull(producerResponse2.getYearWinnerPrizes());
         assertEquals(1, producerResponse2.getYearWinnerPrizes().size());
         assertEquals(2010, producerResponse2.getYearWinnerPrizes().get(0));
 
-        verify(fileService, times(1)).loadFromDefaultPath();
-        verifyNoInteractions(producerRepository);
+        verifyNoInteractions(producerPrizeRepository);
     }
-    
-    private List<String> generateTwoProducersLines() {
-        List<String> result = new ArrayList<>();
-        result.add("producer;year;movie-name;");
-        result.add("Producer 1;2000;");
-        result.add("Producer 2;2010;");
+
+    private List<MovieEntity> loadMovies() {
+        List<MovieEntity> result = new ArrayList<>();
+
+        result.add(MovieEntity.builder().producer("Producer 1").year(2000).winner(TRUE).build());
+
+        result.add(MovieEntity.builder().producer("Producer 2").year(2010).winner(TRUE).build());
 
         return result;
     }
 
-    private List<String> generateLines() {
-        List<String> result = new ArrayList<>();
-        result.add("producer;year;movie-name;");
-        result.add("Producer 1;2000;");
-        result.add("Producer 1;2010;");
-        result.add("Producer 1;2011;");
+    private List<MovieEntity> loadInvalidMovies() {
+        List<MovieEntity> result = new ArrayList<>();
 
         return result;
     }
-
-    private List<String> generateInvalidLines() {
-        List<String> result = new ArrayList<>();
-        result.add("Producer 1;;");
-        result.add("Producer 1;tralala; 2000;");
-        result.add("abc;");
-
-        return result;
-    }
-
-    private void prepareMockReadFile(List<String> expectedResponse) {
-        when(fileService.loadFromDefaultPath()).thenReturn(expectedResponse);
-    }
-
 }

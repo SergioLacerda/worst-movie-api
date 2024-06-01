@@ -1,6 +1,6 @@
 package com.worst.producer.service;
 
-import com.worst.producer.domain.ProducerEntity;
+import com.worst.producer.domain.ProducerPrizesEntity;
 import com.worst.producer.domain.dto.IntervalDTO;
 import com.worst.producer.domain.dto.ProducerPrizesDTO;
 import com.worst.producer.domain.dto.SumarizeProducersDTO;
@@ -15,10 +15,10 @@ import java.util.List;
 @Log4j2
 public class ProducerIntervalServiceImpl {
 
-    public List<ProducerPrizesDTO> calculateProducersIntervals(List<ProducerEntity> producers){
+    public List<ProducerPrizesDTO> calculateProducersIntervals(List<ProducerPrizesEntity> producers){
         try{
             List<ProducerPrizesDTO> result = new ArrayList<>();
-            for(ProducerEntity producer : producers){
+            for(ProducerPrizesEntity producer : producers){
                 result.add(ProducerPrizesDTO.builder()
                     .producerName(producer.getProducerName())
                     .intervals(calculateIntervals(producer.getProducerName(), producer.getYearWinnerPrizes()))

@@ -2,6 +2,7 @@ package com.worst.producer.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,11 @@ public class FilesServiceImpl {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    @Value("${generateFile.csvFile}")
+    private String localDirectory;
+
     public List<String> loadFromDefaultPath() {
-        return readFile("classpath:data/movies.csv");
+        return readFile(localDirectory);
     }
 
     public List<String> readFile(String filePath){

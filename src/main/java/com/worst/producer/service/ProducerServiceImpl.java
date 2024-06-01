@@ -1,7 +1,8 @@
 package com.worst.producer.service;
 
-import com.worst.producer.domain.ProducerEntity;
-import com.worst.producer.repository.ProducerRepository;
+import com.worst.producer.domain.MovieEntity;
+import com.worst.producer.domain.ProducerPrizesEntity;
+import com.worst.producer.repository.ProducerPrizeRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,67 +18,40 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Log4j2
 public class ProducerServiceImpl {
 
-    private static final String CHAR_DELIMITER = ";";
-
     @Autowired
-    private ProducerRepository producerRepository;
+    private ProducerPrizeRepository producerPrizeRepository;
 
-    @Autowired
-    private FilesServiceImpl filesService;
-
-    public List<ProducerEntity> loadProducersFromCSV(){
+    public void save(ProducerPrizesEntity producer){
         try{
-            List<String> rawFiles = filesService.loadFromDefaultPath();
-
-            removeHeader(rawFiles);
-
-            return loadProducersFromCSV(rawFiles);
-        }catch (Exception exception){
-            log.atInfo().log("Failed to convert CSV rows into entity.");
-            log.atError().log(exception.getMessage());
-
-            return new ArrayList<>();
-        }
-    }
-
-    public void save(ProducerEntity producer){
-        try{
-            producerRepository.save(producer);
+            producerPrizeRepository.save(producer);
         }catch (Exception exception){
             log.atInfo().log("Failed to persist entity.");
             log.atError().log(exception.getMessage());
         }
     }
 
-    public void saveAll(List<ProducerEntity> producerEntities) {
+    public void saveAll(List<ProducerPrizesEntity> producerEntities) {
         try{
-            producerRepository.saveAll(producerEntities);
+            producerPrizeRepository.saveAll(producerEntities);
         }catch (Exception exception){
             log.atInfo().log("Failed to persist all entities.");
             log.atError().log(exception.getMessage());
         }
     }
-    private void removeHeader(List<String> rawFiles) {
-        if(isEmpty(rawFiles)){
-            return;
-        }
 
-        rawFiles.remove(0);
-    }
-
-    private List<ProducerEntity> loadProducersFromCSV(List<String> rawLines) {
-        if(isEmpty(rawLines)){
+    public List<ProducerPrizesEntity> loadProducersPrizesFromMovies(List<MovieEntity> movies) {
+        if(isEmpty(movies)){
             return new ArrayList<>();
         }
 
         Map<String, List<Integer>> mapProducer = new HashMap<>();
-        for(String row : rawLines){
-            parseEntity(mapProducer, row);
+        for(MovieEntity movie : movies){
+            parseProducer(mapProducer, movie);
         }
 
-        List<ProducerEntity> producers = new ArrayList<>();
+        List<ProducerPrizesEntity> producers = new ArrayList<>();
         mapProducer.entrySet().forEach( rawProducer -> producers.add(
-            ProducerEntity.builder()
+            ProducerPrizesEntity.builder()
                 .producerName(rawProducer.getKey())
                 .yearWinnerPrizes(rawProducer.getValue())
                 .build())
@@ -86,24 +60,21 @@ public class ProducerServiceImpl {
         return producers;
     }
 
-    private void parseEntity(Map<String, List<Integer>> mapProducer, String row) {
+    private void parseProducer(Map<String, List<Integer>> mapProducer, MovieEntity movie) {
         try {
-            String[] rawEntity = row.split(CHAR_DELIMITER);
 
-            String rawProducer = rawEntity[0];
-            String rawYear = rawEntity[1];
-
-            mapProducer.put(rawProducer, addYear(mapProducer.get(rawProducer), rawYear));
+            String producerName = movie.getProducer();
+            mapProducer.put(producerName, addYear(mapProducer.get(producerName), movie.getYear()));
         }catch (Exception exception){
-            log.atInfo().log("Failed to parse line: ", row);
+            log.atInfo().log("Failed to parse from movie: ", movie);
             log.atError().log(exception.getMessage());
         }
     }
 
-    private List<Integer> addYear(List<Integer> rawYears, String rawYear) {
+    private List<Integer> addYear(List<Integer> rawYears, Integer year) {
         List<Integer> result = isEmpty(rawYears) ? new ArrayList<>() : rawYears;
 
-        result.add(Integer.valueOf(rawYear));
+        result.add(year);
 
         return result;
     }

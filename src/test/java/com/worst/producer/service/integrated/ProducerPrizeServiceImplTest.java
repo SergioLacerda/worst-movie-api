@@ -1,7 +1,7 @@
 package com.worst.producer.service.integrated;
 
-import com.worst.producer.domain.ProducerEntity;
-import com.worst.producer.repository.ProducerRepository;
+import com.worst.producer.domain.ProducerPrizesEntity;
+import com.worst.producer.repository.ProducerPrizeRepository;
 import com.worst.producer.service.ProducerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,25 +16,25 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ProducerServiceImplTest {
+class ProducerPrizeServiceImplTest {
 
     @Autowired
     private ProducerServiceImpl producerService;
 
     @Autowired
-    private ProducerRepository producerRepository;
+    private ProducerPrizeRepository producerPrizeRepository;
 
     @Test
-    void testReadFileErrorInvalidInput() {
-        List<ProducerEntity> producerEntities = producerRepository.findAll();
+    void testPersistance() {
+        List<ProducerPrizesEntity> producerEntities = producerPrizeRepository.findAll();
         assertTrue(isEmpty(producerEntities));
 
-        producerService.save(ProducerEntity.builder()
+        producerService.save(ProducerPrizesEntity.builder()
             .producerName("teste")
             .yearWinnerPrizes(Arrays.asList(2000, 2001))
             .build());
 
-        List<ProducerEntity> producerEntitiesAfter = producerRepository.findAll();
+        List<ProducerPrizesEntity> producerEntitiesAfter = producerPrizeRepository.findAll();
         assertFalse(isEmpty(producerEntitiesAfter));
         assertEquals(1 ,producerEntitiesAfter.size());
     }

@@ -4,11 +4,11 @@ import com.worst.producer.service.FilesServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @SpringBootTest
 class FilesServiceImplUnitTest {
@@ -20,11 +20,11 @@ class FilesServiceImplUnitTest {
     void testReadFileErrorInvalidInput() {
         List<String> stringsRead = fileService.readFile(null);
         assertNotNull(stringsRead);
-        assertTrue(CollectionUtils.isEmpty(stringsRead));
+        assertTrue(isEmpty(stringsRead));
 
         List<String> stringsRead2 = fileService.readFile("");
         assertNotNull(stringsRead2);
-        assertTrue(CollectionUtils.isEmpty(stringsRead2));
+        assertTrue(isEmpty(stringsRead2));
     }
 
     @Test
@@ -33,14 +33,14 @@ class FilesServiceImplUnitTest {
 
         List<String> stringsRead = fileService.readFile(filePath);
         assertNotNull(stringsRead);
-        assertTrue(CollectionUtils.isEmpty(stringsRead));
+        assertTrue(isEmpty(stringsRead));
     }
 
     @Test
     void testReadFile() {
-        String expectedHeader = "producer;year;movie-name;";
-        String expectedRow = "Producer 1;2000;tralala;";
-        String expectedRow2 = "Producer 1;2001;";
+        String expectedHeader = "year;title;studios;producers;winner";
+        String expectedRow = "1980;title;studios;Teste01;yes";
+        String expectedRow2 = "1984;title;studios;Teste01;";
 
         List<String> stringsRead = fileService.readFile("classpath:readfile_ok_test.csv");
         assertNotNull(stringsRead);
