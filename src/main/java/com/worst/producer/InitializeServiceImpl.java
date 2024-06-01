@@ -1,4 +1,4 @@
-package com.worst.producer.service;
+package com.worst.producer;
 
 import com.worst.producer.domain.MovieEntity;
 import lombok.extern.log4j.Log4j2;

@@ -32,24 +32,5 @@ info:
 jackson:
   default-property-inclusion: NON_NULL
 
-# Spring Boot Actuator Config
-boot:
-  admin:
-    client:
-      enabled: false
-      url: ${ENV_SPRING_BOOT_ADMIN_URL}
-      instance:
-        name: ${spring.application.name}
-        prefer-ip: true
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: health, metrics
-        exclude: beans, scheduledtasks, heapdump, mappings, env, flyway, configprops, shutdown
-    endpoint:
-      health:
-        show-details: always
-
 generateFile:
   csvFile: ${ENV_CSV_FILE:classpath:data/movies.csv}

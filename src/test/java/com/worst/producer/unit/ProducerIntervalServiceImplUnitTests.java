@@ -1,10 +1,10 @@
-package com.worst.producer.service.unit;
+package com.worst.producer.unit;
 
 import com.worst.producer.domain.ProducerPrizesEntity;
 import com.worst.producer.domain.dto.IntervalDTO;
 import com.worst.producer.domain.dto.ProducerPrizesDTO;
 import com.worst.producer.domain.dto.SumarizeProducersDTO;
-import com.worst.producer.service.ProducerIntervalServiceImpl;
+import com.worst.producer.ProducerIntervalServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

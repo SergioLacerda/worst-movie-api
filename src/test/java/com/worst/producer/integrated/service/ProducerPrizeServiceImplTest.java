@@ -1,8 +1,8 @@
-package com.worst.producer.service.integrated;
+package com.worst.producer.integrated.service;
 
 import com.worst.producer.domain.ProducerPrizesEntity;
 import com.worst.producer.repository.ProducerPrizeRepository;
-import com.worst.producer.service.ProducerServiceImpl;
+import com.worst.producer.ProducerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.worst.producer.service;
+package com.worst.producer;
 
 import com.worst.producer.domain.MovieEntity;
 import com.worst.producer.repository.MovieRepository;
@@ -111,4 +111,7 @@ public class MovieServiceImpl {
         return rawEntity.length > position ? rawEntity[position] : null;
     }
 
+    public List<MovieEntity> findMovies(String producerName) {
+        return hasLength(producerName) ? movieRepository.findByProducer(producerName) : movieRepository.findAll();
+    }
 }

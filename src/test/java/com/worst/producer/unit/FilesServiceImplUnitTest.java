@@ -1,6 +1,6 @@
-package com.worst.producer.service.unit;
+package com.worst.producer.unit;
 
-import com.worst.producer.service.FilesServiceImpl;
+import com.worst.producer.FilesServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

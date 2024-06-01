@@ -1,4 +1,4 @@
-package com.worst.producer.service;
+package com.worst.producer;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

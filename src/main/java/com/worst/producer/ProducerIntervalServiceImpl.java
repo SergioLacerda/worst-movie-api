@@ -1,4 +1,4 @@
-package com.worst.producer.service;
+package com.worst.producer;
 
 import com.worst.producer.domain.ProducerPrizesEntity;
 import com.worst.producer.domain.dto.IntervalDTO;

@@ -1,8 +1,8 @@
-package com.worst.producer.service.integrated;
+package com.worst.producer.integrated.service;
 
 import com.worst.producer.domain.MovieEntity;
 import com.worst.producer.repository.MovieRepository;
-import com.worst.producer.service.MovieServiceImpl;
+import com.worst.producer.MovieServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +10,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 @SpringBootTest

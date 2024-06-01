@@ -1,9 +1,9 @@
-package com.worst.producer.service.unit;
+package com.worst.producer.unit;
 
 import com.worst.producer.domain.MovieEntity;
 import com.worst.producer.domain.ProducerPrizesEntity;
 import com.worst.producer.repository.ProducerPrizeRepository;
-import com.worst.producer.service.ProducerServiceImpl;
+import com.worst.producer.ProducerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
