@@ -19,4 +19,4 @@ server:
     context-path: /api
 
 generateFile:
-  localDirectory: ${ENV_LOCAL_DIRECTORY:/tmp}
+  csvFile: ${ENV_CSV_FILE:classpath:data/movies-test.csv}

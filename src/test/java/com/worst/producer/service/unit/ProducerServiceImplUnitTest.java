@@ -1,6 +1,9 @@
-package com.worst.producer.service;
+package com.worst.producer.service.unit;
 
 import com.worst.producer.domain.ProducerEntity;
+import com.worst.producer.repository.ProducerRepository;
+import com.worst.producer.service.FilesServiceImpl;
+import com.worst.producer.service.ProducerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,52 +17,58 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class ProducerServiceImplUnitTest {
+class ProducerServiceImplUnitTest {
 
     @InjectMocks
     private ProducerServiceImpl producerService;
 
     @Mock
+    private ProducerRepository producerRepository;
+
+    @Mock
     private FilesServiceImpl fileService;
 
     @Test
-    public void testReadFileErrorFileNotFound() {
+    void testReadFileErrorFileNotFound() {
         prepareMockReadFile(null);
 
-        List<ProducerEntity> response = producerService.loadProducers();
+        List<ProducerEntity> response = producerService.loadProducersFromCSV();
         assertNotNull(response);
         assertTrue(CollectionUtils.isEmpty(response));
 
         verify(fileService, times(1)).loadFromDefaultPath();
+        verifyNoInteractions(producerRepository);
     }
 
     @Test
-    public void testReadFileErrorEmptyFile() {
+    void testReadFileErrorEmptyFile() {
         prepareMockReadFile(new ArrayList<>());
 
-        List<ProducerEntity> response = producerService.loadProducers();
+        List<ProducerEntity> response = producerService.loadProducersFromCSV();
         assertNotNull(response);
         assertTrue(CollectionUtils.isEmpty(response));
 
         verify(fileService, times(1)).loadFromDefaultPath();
+        verifyNoInteractions(producerRepository);
     }
 
     @Test
-    public void testReadFileErrorInvalidContent() {
+    void testReadFileErrorInvalidContent() {
         prepareMockReadFile(generateInvalidLines());
 
-        List<ProducerEntity> response = producerService.loadProducers();
+        List<ProducerEntity> response = producerService.loadProducersFromCSV();
         assertNotNull(response);
         assertTrue(CollectionUtils.isEmpty(response));
 
         verify(fileService, times(1)).loadFromDefaultPath();
+        verifyNoInteractions(producerRepository);
     }
 
     @Test
-    public void testReadFile() {
+    void testReadFile() {
         prepareMockReadFile(generateLines());
 
-        List<ProducerEntity> response = producerService.loadProducers();
+        List<ProducerEntity> response = producerService.loadProducersFromCSV();
         assertNotNull(response);
         assertEquals(1, response.size());
 
@@ -73,13 +82,14 @@ public class ProducerServiceImplUnitTest {
         assertEquals(2011, producerResponse.getYearWinnerPrizes().get(2));
 
         verify(fileService, times(1)).loadFromDefaultPath();
+        verifyNoInteractions(producerRepository);
     }
 
     @Test
-    public void testReadFileWithTwoProducers() {
+    void testReadFileWithTwoProducers() {
         prepareMockReadFile(generateTwoProducersLines());
 
-        List<ProducerEntity> response = producerService.loadProducers();
+        List<ProducerEntity> response = producerService.loadProducersFromCSV();
         assertNotNull(response);
         assertEquals(2, response.size());
 
@@ -98,8 +108,9 @@ public class ProducerServiceImplUnitTest {
         assertEquals(2010, producerResponse2.getYearWinnerPrizes().get(0));
 
         verify(fileService, times(1)).loadFromDefaultPath();
+        verifyNoInteractions(producerRepository);
     }
-
+    
     private List<String> generateTwoProducersLines() {
         List<String> result = new ArrayList<>();
         result.add("producer;year;movie-name;");
@@ -131,4 +142,5 @@ public class ProducerServiceImplUnitTest {
     private void prepareMockReadFile(List<String> expectedResponse) {
         when(fileService.loadFromDefaultPath()).thenReturn(expectedResponse);
     }
+
 }

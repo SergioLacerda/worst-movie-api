@@ -1,5 +1,6 @@
-package com.worst.producer.service;
+package com.worst.producer.service.unit;
 
+import com.worst.producer.service.FilesServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +17,7 @@ class FilesServiceImplUnitTest {
     private FilesServiceImpl fileService;
 
     @Test
-    public void testReadFileErrorInvalidInput() {
+    void testReadFileErrorInvalidInput() {
         List<String> stringsRead = fileService.readFile(null);
         assertNotNull(stringsRead);
         assertTrue(CollectionUtils.isEmpty(stringsRead));
@@ -27,8 +28,8 @@ class FilesServiceImplUnitTest {
     }
 
     @Test
-    public void testReadFileErrorInvalidContent() {
-        String filePath = "src/test/resources/readfile_invalid_test.csv";
+    void testReadFileErrorInvalidContent() {
+        String filePath = "classpath:readfile_invalid_test.csv";
 
         List<String> stringsRead = fileService.readFile(filePath);
         assertNotNull(stringsRead);
@@ -36,12 +37,12 @@ class FilesServiceImplUnitTest {
     }
 
     @Test
-    public void testReadFile() {
+    void testReadFile() {
         String expectedHeader = "producer;year;movie-name;";
         String expectedRow = "Producer 1;2000;tralala;";
         String expectedRow2 = "Producer 1;2001;";
 
-        List<String> stringsRead = fileService.readFile("src/test/resources/readfile_ok_test.csv");
+        List<String> stringsRead = fileService.readFile("classpath:readfile_ok_test.csv");
         assertNotNull(stringsRead);
 
         assertEquals(3, stringsRead.size());

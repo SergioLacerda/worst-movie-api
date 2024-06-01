@@ -52,4 +52,4 @@ boot:
         show-details: always
 
 generateFile:
-  localDirectory: ${ENV_LOCAL_DIRECTORY:/tmp}
+  csvFile: ${ENV_CSV_FILE:classpath:data/movies.csv}

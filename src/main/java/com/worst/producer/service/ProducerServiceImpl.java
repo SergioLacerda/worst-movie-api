@@ -1,6 +1,7 @@
 package com.worst.producer.service;
 
 import com.worst.producer.domain.ProducerEntity;
+import com.worst.producer.repository.ProducerRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,18 @@ public class ProducerServiceImpl {
     private static final String CHAR_DELIMITER = ";";
 
     @Autowired
+    private ProducerRepository producerRepository;
+
+    @Autowired
     private FilesServiceImpl filesService;
 
-    public List<ProducerEntity> loadProducers(){
+    public List<ProducerEntity> loadProducersFromCSV(){
         try{
             List<String> rawFiles = filesService.loadFromDefaultPath();
 
             removeHeader(rawFiles);
 
-            return loadProducers(rawFiles);
+            return loadProducersFromCSV(rawFiles);
         }catch (Exception exception){
             log.atInfo().log("Failed to convert CSV rows into entity.");
             log.atError().log(exception.getMessage());
@@ -36,6 +40,23 @@ public class ProducerServiceImpl {
         }
     }
 
+    public void save(ProducerEntity producer){
+        try{
+            producerRepository.save(producer);
+        }catch (Exception exception){
+            log.atInfo().log("Failed to persist entity.");
+            log.atError().log(exception.getMessage());
+        }
+    }
+
+    public void saveAll(List<ProducerEntity> producerEntities) {
+        try{
+            producerRepository.saveAll(producerEntities);
+        }catch (Exception exception){
+            log.atInfo().log("Failed to persist all entities.");
+            log.atError().log(exception.getMessage());
+        }
+    }
     private void removeHeader(List<String> rawFiles) {
         if(isEmpty(rawFiles)){
             return;
@@ -44,7 +65,7 @@ public class ProducerServiceImpl {
         rawFiles.remove(0);
     }
 
-    private List<ProducerEntity> loadProducers(List<String> rawLines) {
+    private List<ProducerEntity> loadProducersFromCSV(List<String> rawLines) {
         if(isEmpty(rawLines)){
             return new ArrayList<>();
         }
@@ -86,4 +107,5 @@ public class ProducerServiceImpl {
 
         return result;
     }
+
 }

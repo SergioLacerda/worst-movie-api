@@ -1,10 +1,15 @@
 package com.worst.producer.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,45 +19,35 @@ import static org.springframework.util.StringUtils.hasLength;
 @Log4j2
 public class FilesServiceImpl {
 
-    @Value("${generateFile.localDirectory}")
-    private String localDirectory;
+    @Autowired
+    private ResourceLoader resourceLoader;
+
+    public List<String> loadFromDefaultPath() {
+        return readFile("classpath:data/movies.csv");
+    }
 
     public List<String> readFile(String filePath){
+        List<String> result = new ArrayList<>();
+
         if(!hasLength(filePath)){
-            return new ArrayList<>();
+            return result;
         }
 
         try {
-            FileInputStream inputStream = new FileInputStream(filePath);
+            Resource resource = resourceLoader.getResource(filePath);
+            InputStream inputStream = resource.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            return read(inputStream);
-        }catch (Exception exception){
-            log.atInfo().log("Failed to read file at path: " + filePath);
-            log.atError().log(exception.getMessage());
-
-            return new ArrayList<>();
-        }
-    }
-
-    private List<String> read(InputStream inputStream){
-        List<String> result = new ArrayList<>();
-
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))){
-            String line = bufferedReader.readLine();
-            while (line != null) {
+            String line;
+            while ((line = reader.readLine()) != null) {
                 result.add(line);
-
-                line = bufferedReader.readLine();
             }
-        } catch (IOException exception){
-            log.atInfo().log("Failed to read file.", " Detail: ", exception.getMessage());
-            log.atError().log(exception.getMessage());
-        }
 
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
-    public List<String> loadFromDefaultPath() {
-        return readFile(localDirectory);
-    }
 }
