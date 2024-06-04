@@ -13,7 +13,5 @@ replay_pid*
 
 .mtj.tmp/
 .idea
-.gradle
-gradle
 build
 build/*

@@ -28,11 +28,11 @@ class MovieServiceImplTest {
     void testPersistance() {
         List<MovieEntity> moviesEntities = movieRepository.findAll();
         assertFalse(isEmpty(moviesEntities));
-        assertEquals(7 ,moviesEntities.size());
+        assertEquals(206 ,moviesEntities.size());
         movieService.save(MovieEntity.builder().title("Test").build());
 
         List<MovieEntity> moviesEntitiesAfter = movieRepository.findAll();
         assertFalse(isEmpty(moviesEntitiesAfter));
-        assertEquals(8 ,moviesEntitiesAfter.size());
+        assertEquals(207 ,moviesEntitiesAfter.size());
     }
 }

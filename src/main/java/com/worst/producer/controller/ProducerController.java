@@ -24,10 +24,10 @@ public class ProducerController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<SumarizeProducersDTO> getAccountsParameters(@RequestParam(required = false) String producerName) {
-        SumarizeProducersDTO response = producerResearchService.getProducersIntervals(producerName);
+    public ResponseEntity<SumarizeProducersDTO> getAccountsParameters() {
+        SumarizeProducersDTO response = producerResearchService.getProducersIntervals();
 
-        return isInvalid(response) ? ResponseEntity.notFound().build() : ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     private boolean isInvalid(SumarizeProducersDTO response) {

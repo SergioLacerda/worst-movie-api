@@ -21,9 +21,9 @@ public class ProducerResearchServiceImpl {
     @Autowired
     private ProducerIntervalServiceImpl producerIntervalService;
 
-    public SumarizeProducersDTO getProducersIntervals(String producerName) {
+    public SumarizeProducersDTO getProducersIntervals() {
 
-        List<MovieEntity> movies = movieService.findMovies(producerName);
+        List<MovieEntity> movies = movieService.findMovies();
 
         List<ProducerPrizesEntity> producerPrizes = producerService.loadProducersPrizesFromMovies(movies);
 

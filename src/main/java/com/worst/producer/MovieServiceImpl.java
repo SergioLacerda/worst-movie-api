@@ -111,7 +111,7 @@ public class MovieServiceImpl {
         return rawEntity.length > position ? rawEntity[position] : null;
     }
 
-    public List<MovieEntity> findMovies(String producerName) {
-        return hasLength(producerName) ? movieRepository.findByProducer(producerName) : movieRepository.findAll();
+    public List<MovieEntity> findMovies() {
+        return movieRepository.findAll();
     }
 }
